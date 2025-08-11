@@ -141,18 +141,7 @@ You can edit the templates as required in the `views/` folder and re-run with
 
 ## Data updates
 
-If the data in the master Access database has changed, you need to requery the database.
-
-This reads the master Access database and saves a JSON representation of the tables as .json files in the `output/data/` folder. This is a cache, so that you rarely need to connect to the database. When the data changes, you can see the changes in Git.
-
-- Updating the data from the Access database will currently **ONLY work on Windows**.
-- You will also need to have an **admin account**, because unfortunately `dotnet build` requires admin.
-
-The Windows PC will need Dotnet SDK/Runtime and Git installed; both are available as Windows MSI installers.
-
-You will need the x64 Microsoft Access drivers from https://www.microsoft.com/en-gb/download/details.aspx?id=13255. Choose `AccessDatabaseEngine_X64.exe`.
-
-(If you already have a 32-bit install of Microsoft office you will need to run the install in passive mode, open an admin console (powershell or command prompt), navigate to the folder and run `AccessDatabaseEngine_X64.exe /quiet`)
+Previously we needed to generate the JSON files from the Access database but now they are provided to us by the data engineers.
 
 Full list of steps to update the data:
 
@@ -161,7 +150,9 @@ Full list of steps to update the data:
     git checkout develop
     dotnet restore
     dotnet build
-    dotnet run -- -u "path/to/new/natura2000.mdb"
+
+Update the `habitats.json`, `sites.json`, and `species.json` files in the output/json directory as needed.
+    
     dotnet run -- -g -v     # rebuild the pages and run locally to check.
     git commit -a -m "Updated data files"
     git push
@@ -252,25 +243,16 @@ Checkout the SAC project from git. The folder containing the project is your roo
 Download the latest JNCC.Microsite.SAC_{version}.zip
 file [from the releases section in git](https://github.com/jncc/sac-microsite/releases) and extract it to a suitable location outside of the sac project.
 
-### Update the data
+### Update the HTML pages with new data
 
-Get a copy of the Natura database and run the executable JNCC.Microsite.SAC.exe from the extracted release zip file.
+Run the executable JNCC.Microsite.SAC.exe from the extracted release zip file.
 
 For example, given that:
 
 - sac root path = c:\development\sac-microsite
-- ASP natura database path = c:\development\ASP NATURA DATABASE.mdb
 - JNCC.Microsite.SAC.exe is in the curent folder
 
-Run the following to update the data
-
-    JNCC.Microsite.SAC.exe -r c:\development\sac-microsite -u "c:\development\ASP NATURA DATABASE.mdb"
-
-This process will update the json files in c:\development\sac-microsite\output\json
-
-### Update the website
-
-The following instruciotns will update the web pages using the data extracted in the previous step.
+Add the `habitats.json`, `sites.json`, and `species.json` files to c:\development\sac-microsite\output\json then run the following to generate the HTML pages:
 
     JNCC.Microsite.SAC.exe -r c:\development\sac-microsite -g -v
 
